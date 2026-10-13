@@ -1,0 +1,18 @@
+<svg xmlns="http://w3.org" viewBox="0 0 32 32">
+  <!-- Rounded Background -->
+  <rect width="32" height="32" rx="6" fill="#4F46E5"/>
+  
+  <!-- Number 12 -->
+  <text 
+    x="50%" 
+    y="55%" 
+    font-family="system-ui, -apple-system, sans-serif" 
+    font-size="16" 
+    font-weight="bold" 
+    fill="#FFFFFF" 
+    dominant-baseline="middle" 
+    text-anchor="middle"
+    letter-spacing="-0.5">
+    12
+  </text>
+</svg>
