@@ -1,0 +1,52 @@
+[
+  {
+    "branch":"Regina Freight",
+    "manager":"Troy Folbar",
+    "email":"tfolbar@jays.ca"
+  },
+  {
+    "branch":"Regina Moving",
+    "manager":"TJ Letkeman",
+    "email":"TLetkeman@Jays.ca"
+  },
+  {
+    "branch":"Saskatoon Freight",
+    "manager":"Chris Simonson",
+    "email":"CSimonson@Jays.ca"
+  },
+  {
+    "branch":"Saskatoon Moving",
+    "manager":"Korla Pfrimmer",
+    "email":"KPfrimmer@Jays.ca"
+  },
+  {
+    "branch":"Prince Albert",
+    "manager":"Nancy Simpson",
+    "email":"nsimpson@Jays.ca"
+  },
+  {
+    "branch":"Swift Current",
+    "manager":"Sharon Hurrell",
+    "email":"SHurrell@Jays.ca"
+  },
+  {
+    "branch":"Moose Jaw",
+    "manager":"Ron Boys",
+    "email":"rboys@Jays.ca"
+  },
+  {
+    "branch":"BattleFord",
+    "manager":"Neil Lascelle",
+    "email":"nlascelle@Jays.ca"
+  },
+  {
+    "branch":"Estevan",
+    "manager":"Victoria Lowenberg",
+    "email":"vlowenberg@Jays.ca"
+  },
+  {
+    "branch":"Yorkton",
+    "manager":"Joey Desjarlais",
+    "email":"vlowenberg@Jays.ca"
+  }
+]
