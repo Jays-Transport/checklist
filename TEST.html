@@ -310,6 +310,40 @@ document.getElementById("date").valueAsDate=new Date();
 
 const canvas=document.getElementById("signature");
 const ctx=canvas.getContext("2d");
+
+const managerCanvas = document.getElementById("managerSignature");
+const managerCtx = managerCanvas.getContext("2d");
+let managerHasSignature = false;
+
+
+function resizeManagerCanvas(){
+
+    const ratio =
+        Math.max(window.devicePixelRatio || 1, 1);
+
+    const rect =
+        managerCanvas.getBoundingClientRect();
+
+    managerCanvas.width =
+        rect.width * ratio;
+
+    managerCanvas.height =
+        rect.height * ratio;
+
+    managerCtx.setTransform(
+        ratio,
+        0,
+        0,
+        ratio,
+        0,
+        0
+    );
+
+    managerCtx.lineWidth = 2;
+    managerCtx.lineCap = "round";
+}
+
+	
 let drawing=false, hasSignature=false;
 
 function resizeCanvas(){
@@ -321,8 +355,93 @@ function resizeCanvas(){
   if(hasSignature){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,rect.width,rect.height);img.src=old;}
   ctx.lineWidth=2;ctx.lineCap="round";ctx.lineJoin="round";
 }
-window.addEventListener("resize",resizeCanvas); resizeCanvas();
+/*window.addEventListener("resize",resizeCanvas); 
+resizeCanvas();*/
 
+window.addEventListener("resize", () => {
+
+    resizeCanvas();
+    resizeManagerCanvas();
+
+});
+
+resizeCanvas();
+resizeManagerCanvas();
+
+let managerDrawing = false;
+
+function managerPos(e){
+
+    const r =
+        managerCanvas.getBoundingClientRect();
+
+    return {
+        x:e.clientX-r.left,
+        y:e.clientY-r.top
+    };
+}
+
+function managerStart(e){
+
+    managerDrawing = true;
+
+    const p =
+        managerPos(e);
+
+    managerCtx.beginPath();
+    managerCtx.moveTo(p.x,p.y);
+}
+
+function managerMove(e){
+
+    if(!managerDrawing) return;
+
+    const p =
+        managerPos(e);
+
+    managerCtx.lineTo(p.x,p.y);
+    managerCtx.stroke();
+
+    managerHasSignature = true;
+}
+
+function managerEnd(){
+
+    managerDrawing = false;
+}
+
+function clearManagerSignature(){
+
+    managerCtx.clearRect(
+        0,
+        0,
+        managerCanvas.width,
+        managerCanvas.height
+    );
+
+    managerHasSignature = false;
+}
+
+managerCanvas.addEventListener(
+    "pointerdown",
+    managerStart
+);
+
+managerCanvas.addEventListener(
+    "pointermove",
+    managerMove
+);
+
+managerCanvas.addEventListener(
+    "pointerup",
+    managerEnd
+);
+
+managerCanvas.addEventListener(
+    "pointerleave",
+    managerEnd
+);
+	
 function pos(e){
  const r=canvas.getBoundingClientRect();
  const p=e.touches?e.touches[0]:e;
@@ -385,7 +504,9 @@ async function submitChecklist() {
         manager: document.getElementById("manager").value,
         comments: document.getElementById("comments").value,
         results,
-        signature: canvas.toDataURL("image/png")
+        signature: canvas.toDataURL("image/png"),
+		managerComments:document.getElementById("managerComments").value,
+		managerSignature:managerCanvas.toDataURL("image/png")
     };
 
     localStorage.setItem(
@@ -505,8 +626,41 @@ if(record.signature){
 
 y += 20;
 
+y += 20;
+
 pdf.text(
     `Branch Mgr Name: ${record.manager}`,
+    10,
+    y
+);
+
+if(record.managerSignature){
+
+    pdf.addImage(
+        record.managerSignature,
+        "PNG",
+        120,
+        y - 8,
+        40,
+        15
+    );
+}
+
+y += 20;
+
+pdf.text(
+    "Manager Comments:",
+    10,
+    y
+);
+
+y += 5;
+
+pdf.text(
+    pdf.splitTextToSize(
+        record.managerComments || "",
+        180
+    ),
     10,
     y
 );
@@ -515,51 +669,10 @@ pdf.save(
     `Checklist_${record.branch}_${record.date}.pdf`
 );
 
-/*
-    const pageWidth = 215.9;
-    const pageHeight = 279.4;
+pdf.save(
+    `Checklist_${record.branch}_${record.date}.pdf`
+);
 
-    const imgWidth = pageWidth;
-    const imgHeight =
-        (canvasImage.height * imgWidth) /
-        canvasImage.width;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    pdf.addImage(
-        imgData,
-        "PNG",
-        0,
-        position,
-        imgWidth,
-        imgHeight
-    );
-
-    heightLeft -= pageHeight;
-
-    while (heightLeft > 0) {
-
-        position = heightLeft - imgHeight;
-
-        pdf.addPage();
-
-        pdf.addImage(
-            imgData,
-            "PNG",
-            0,
-            position,
-            imgWidth,
-            imgHeight
-        );
-
-        heightLeft -= pageHeight;
-    }
-
-    pdf.save(
-        `Checklist_${record.branch}_${record.date}.pdf`
-    );
-	*/
     status.textContent =
         "Checklist submitted and PDF downloaded successfully.";
 }
